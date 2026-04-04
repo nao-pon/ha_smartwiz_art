@@ -1,0 +1,288 @@
+blueprint:
+  name: SMARTWIZ+ art Slideshow Update and Push
+  description: >
+    SMARTWIZ+ art の最終 push 成功日時センサーを基準に、
+    一定時間ごとに画像を順送りして update_and_push を実行します。
+    HA 再起動時は最終更新からの経過時間を見て、
+    即実行または残り時間でタイマー再開します。
+    初回でセンサー state が未設定なら、起動時に一度 update_and_push を実行します。
+
+  domain: automation
+
+  input:
+    smartwiz_sensor:
+      name: SMARTWIZ+ art status sensor
+      description: 最終 push 成功日時を state に持つセンサー
+      selector:
+        entity:
+          domain: sensor
+          integration: smartwiz_art
+
+    slide_image_select:
+      name: Slide image input_select
+      description: 画像パスを順番に持つ input_select
+      selector:
+        entity:
+          domain: input_select
+
+    slideshow_message:
+      name: Slideshow message
+      description: 送信用 メッセージ
+      selector:
+        entity:
+          domain: input_text
+
+    slideshow_timer:
+      name: Slideshow timer
+      description: 待機用 timer
+      selector:
+        entity:
+          domain: timer
+
+    interval_minutes:
+      name: Interval minutes
+      description: 次の update_and_push までの待機時間
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 1440
+          mode: box
+          unit_of_measurement: min
+
+    active_from:
+      name: Active from
+      description: スライドショーを動かし始める時刻
+      default: "07:00:00"
+      selector:
+        time:
+
+    active_to:
+      name: Active to
+      description: スライドショーを止める時刻
+      default: "22:00:00"
+      selector:
+        time:
+
+    template_name:
+      name: Template
+      default: today_with_image
+      selector:
+        text:
+
+    output_filename:
+      name: Output filename
+      default: slideshow.png
+      selector:
+        text:
+
+    cycle_images:
+      name: Cycle images
+      description: 最後まで行ったら先頭に戻る
+      default: true
+      selector:
+        boolean:
+
+    lang:
+      default: ja
+      description: 表示言語
+      selector:
+        select:
+          options:
+            - en
+            - ja
+
+    source_map:
+      name: Source map
+      description: update_and_push に渡す source_map
+      default: {}
+      selector:
+        object:
+
+    variables_map:
+      name: Variables
+      description: update_and_push に渡す variables
+      default: {}
+      selector:
+        object:
+
+mode: restart
+
+triggers:
+  - trigger: state
+    entity_id: !input smartwiz_sensor
+    to: null
+    id: sensor_updated
+
+  - trigger: event
+    event_type: timer.finished
+    event_data:
+      entity_id: !input slideshow_timer
+    id: timer_finished
+
+  - trigger: homeassistant
+    event: start
+    id: ha_start
+
+  - trigger: time
+    at: !input active_from
+    id: active_window_start
+
+variables:
+  smartwiz_sensor: !input smartwiz_sensor
+  interval_minutes: !input interval_minutes
+
+  interval_seconds: "{{ (interval_minutes | int(60)) * 60 }}"
+  duration: >
+    {{ "%02d:%02d:%02d"|format(
+        (interval_seconds // 3600) | int,
+        ((interval_seconds % 3600) // 60) | int,
+        (interval_seconds % 60) | int
+    ) }}
+
+  sensor_state: "{{ states(smartwiz_sensor) }}"
+  has_last_push: >
+    {{ states(smartwiz_sensor) not in ['unknown', 'unavailable', 'none', ''] }}
+  last_push_ts: >
+    {% set s = states(smartwiz_sensor) %}
+    {% if s in ['unknown', 'unavailable', 'none', ''] %}
+      {{ none }}
+    {% else %}
+      {{ as_timestamp(s) }}
+    {% endif %}
+
+  active_from: !input active_from
+  active_to: !input active_to
+  is_active_time: >
+    {% set now_t = now().strftime('%H:%M:%S') %}
+    {% if active_from <= active_to %}
+      {{ active_from <= now_t < active_to }}
+    {% else %}
+      {{ now_t >= active_from or now_t < active_to }}
+    {% endif %}
+
+conditions: []
+
+actions:
+  - choose:
+      # 1) push 成功日時センサーが更新されたら、次の1回を予約
+      - conditions:
+          - condition: trigger
+            id: sensor_updated
+          - condition: template
+            value_template: >
+              {{ trigger.to_state is not none and
+                 trigger.to_state.state not in ['unknown', 'unavailable', 'none', ''] and
+                 (trigger.from_state is none or
+                  trigger.to_state.state != trigger.from_state.state) }}
+        sequence:
+          - action: timer.start
+            target:
+              entity_id: !input slideshow_timer
+            data:
+              duration: >
+                {{ "%02d:%02d:%02d"|format(
+                    (interval_seconds // 3600) | int,
+                    ((interval_seconds % 3600) // 60) | int,
+                    (interval_seconds % 60) | int
+                ) }}
+
+      # 2) タイマー完了で画像を進めて update_and_push
+      - conditions:
+          - condition: trigger
+            id: timer_finished
+          - condition: template
+            value_template: "{{ is_active_time }}"
+        sequence:
+          - action: input_select.select_next
+            target:
+              entity_id: !input slide_image_select
+            data:
+              cycle: !input cycle_images
+
+          - action: smartwiz_art.update_and_push
+            data:
+              ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+              template: !input template_name
+              filename: !input output_filename
+              image_path_entity: !input slide_image_select
+              message_entity: !input slideshow_message
+              lang: !input lang
+              source_map: !input source_map
+              variables: !input variables_map
+
+      # 3) HA 起動時の補正
+      - conditions:
+          - condition: trigger
+            id:
+              - ha_start
+              - active_window_start
+        sequence:
+          - choose:
+              # 3-a) 初回で state が空なら、まず1回実行
+              - conditions:
+                  - condition: template
+                    value_template: "{{ not has_last_push }}"
+                  - condition: template
+                    value_template: "{{ is_active_time }}"
+                sequence:
+                  - action: smartwiz_art.update_and_push
+                    data:
+                      ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+                      template: !input template_name
+                      filename: !input output_filename
+                      image_path_entity: !input slide_image_select
+                      message_entity: !input slideshow_message
+                      lang: !input lang
+                      source_map: !input source_map
+                      variables: !input variables_map
+
+              # 3-b) state があるなら経過時間で判定
+              - conditions:
+                  - condition: template
+                    value_template: "{{ has_last_push }}"
+                sequence:
+                  - variables:
+                      elapsed_seconds: "{{ (as_timestamp(now()) - last_push_ts) | int(0) }}"
+                      remain_seconds: "{{ [interval_seconds - ((as_timestamp(now()) - last_push_ts) | int(0)), 0] | max }}"
+
+                  - choose:
+                      # 期限を過ぎていれば即実行
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ elapsed_seconds >= interval_seconds }}"
+                          - condition: template
+                            value_template: "{{ is_active_time }}"
+                        sequence:
+                          - action: input_select.select_next
+                            target:
+                              entity_id: !input slide_image_select
+                            data:
+                              cycle: !input cycle_images
+
+                          - action: smartwiz_art.update_and_push
+                            data:
+                              ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+                              template: !input template_name
+                              filename: !input output_filename
+                              image_path_entity: !input slide_image_select
+                              message_entity: !input slideshow_message
+                              lang: !input lang
+                              source_map: !input source_map
+                              variables: !input variables_map
+
+                      # まだなら残り時間でタイマー再セット
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ elapsed_seconds < interval_seconds }}"
+                        sequence:
+                          - action: timer.start
+                            target:
+                              entity_id: !input slideshow_timer
+                            data:
+                              duration: >
+                                {{ "%02d:%02d:%02d"|format(
+                                    (remain_seconds // 3600) | int,
+                                    ((remain_seconds % 3600) // 60) | int,
+                                    (remain_seconds % 60) | int
+                                ) }}

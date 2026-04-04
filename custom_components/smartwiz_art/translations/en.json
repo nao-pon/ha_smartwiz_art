@@ -1,0 +1,416 @@
+{
+  "title": "SMARTWIZ+ art",
+  "config": {
+    "step": {
+      "user": {
+        "title": "SMARTWIZ+ art Setup",
+        "description": "Manual setup fallback. Device ID is required. Enter host only when using a fixed IP address. If omitted, smartwiz-art-<device_id>.local will be used.",
+        "data": {
+          "device_id": "Device ID",
+          "host": "Host IP (optional, fixed IP only)",
+          "width": "Width",
+          "height": "Height"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Discovered SMARTWIZ+ art",
+        "description": "SMARTWIZ+ art device {device_id} was discovered at {host}. Confirm to register it with Home Assistant."
+      }
+    },
+    "error": {
+      "invalid_device_id": "Invalid device ID.",
+      "cannot_register": "Failed to register the device.",
+      "unknown": "Unexpected error occurred.",
+      "cannot_resolve": "Could not resolve host information from discovery.",
+      "cannot_connect": "Could not connect to the device. Check the host setting and network connection, then try again.",
+      "registration_timeout": "The device was found but did not respond. It may be asleep. Press the button on the device to wake it up, then try again within 1 minute.",
+      "key_exchange_failed": "The device responded, but key registration failed. If it is already registered in the official app or another app, remove it there first, then try again."
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+      "not_smartwiz_art": "The discovered device is not a SMARTWIZ+ art panel."
+    }
+  },
+  "services": {
+    "render_today": {
+      "name": "Render today panel",
+      "description": "Generate a SMARTWIZ+ art image from explicitly provided values.",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant device(s)",
+          "description": "Target SMARTWIZ+ art device(s). Multiple selection supported."
+        },
+        "filename": {
+          "name": "Output filename",
+          "description": "PNG filename to save."
+        },
+        "date": {
+          "name": "Date",
+          "description": "Date text to display."
+        },
+        "weekday": {
+          "name": "Weekday",
+          "description": "Weekday text to display."
+        },
+        "weather": {
+          "name": "Weather",
+          "description": "Weather text to display."
+        },
+        "temperature": {
+          "name": "Temperature",
+          "description": "Temperature text to display."
+        },
+        "rain": {
+          "name": "Rain",
+          "description": "Rain text to display."
+        },
+        "schedule": {
+          "name": "Schedule",
+          "description": "Schedule object to render."
+        },
+        "home_status": {
+          "name": "Home status",
+          "description": "Home status object to render."
+        },
+        "message": {
+          "name": "Message",
+          "description": "Message text to display."
+        },
+        "theme": {
+          "name": "Theme",
+          "description": "Theme name."
+        },
+        "lang": {
+          "name": "Language",
+          "description": "Language used for rendering."
+        },
+        "template": {
+          "name": "Template",
+          "description": "Template name."
+        }
+      }
+    },
+    "update": {
+      "name": "Update panel",
+      "description": "Build panel data from Home Assistant entities.",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art device(s)",
+          "description": "Target SMARTWIZ+ art device(s). Multiple selection supported."
+        },
+        "template": {
+          "name": "Template",
+          "description": "Template name."
+        },
+        "theme": {
+          "name": "Theme",
+          "description": "Theme name."
+        },
+        "lang": {
+          "name": "Language",
+          "description": "Language used for rendering."
+        },
+        "filename": {
+          "name": "Output filename",
+          "description": "PNG filename to save."
+        },
+        "weather_entity": {
+          "name": "Weather entity",
+          "description": "Entity used for weather."
+        },
+        "weather_attribute": {
+          "name": "Weather attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.condition"
+        },
+        "high_temp_entity": {
+          "name": "High temperature entity",
+          "description": "Entity used for high temperature."
+        },
+        "high_temp_attribute": {
+          "name": "High temperature attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.temperature"
+        },
+        "low_temp_entity": {
+          "name": "Low temperature entity",
+          "description": "Entity used for low temperature."
+        },
+        "low_temp_attribute": {
+          "name": "Low temperature attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.templow"
+        },
+        "rain_entity": {
+          "name": "Rain entity",
+          "description": "Entity used for rain."
+        },
+        "rain_attribute": {
+          "name": "Rain attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.precipitation_probability"
+        },
+        "calendar_entity": {
+          "name": "Calendar entity",
+          "description": "Calendar entity used as schedule source."
+        },
+        "calendar_attribute": {
+          "name": "Calendar attribute",
+          "description": "Uses the state if omitted. Example: message"
+        },
+        "schedule_entity": {
+          "name": "Schedule entity",
+          "description": "Entity used for schedule."
+        },
+        "schedule_attribute": {
+          "name": "Schedule attribute",
+          "description": "Uses the state if omitted. Supports string, list, and newline-separated text."
+        },
+        "indoor_temp_entity": {
+          "name": "Indoor temperature entity",
+          "description": "Entity used for indoor temperature."
+        },
+        "indoor_temp_attribute": {
+          "name": "Indoor temperature attribute",
+          "description": "Uses the state if omitted."
+        },
+        "front_lock_entity": {
+          "name": "Front lock entity",
+          "description": "Entity used for front door lock state."
+        },
+        "front_lock_attribute": {
+          "name": "Front lock attribute",
+          "description": "Uses the state if omitted."
+        },
+        "home_status_entity": {
+          "name": "Home status entity",
+          "description": "Entity used for home status."
+        },
+        "home_status_attribute": {
+          "name": "Home status attribute",
+          "description": "Uses the state if omitted. Supports list and newline-separated text."
+        },
+        "message_entity": {
+          "name": "Message entity",
+          "description": "Entity used for message."
+        },
+        "message_attribute": {
+          "name": "Message attribute",
+          "description": "Uses the state if omitted. Example: message / friendly_name"
+        },
+        "image_path_entity": {
+          "name": "Image path entity",
+          "description": "Entity used for image path."
+        },
+        "image_path_attribute": {
+          "name": "Image path attribute",
+          "description": "Uses the state if omitted. Example: /media/my_picture.png"
+        },
+        "photo_preset": {
+          "name": "Photo preset",
+          "description": "Preset for adjusting photo tone and contrast (auto / natural / vivid / soft)"
+        },
+        "source_map": {
+          "name": "Source map",
+          "description": "Map template variables to entity IDs using name: entity_id format.\n\n👉 [See the docs...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md)"
+        },
+        "variables": {
+          "name": "Variables",
+          "description": "Define template variables using name: \"text\" format.\n\n👉 [See the docs...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md)"
+        }
+      }
+    },
+    "push_file": {
+      "name": "Push file",
+      "description": "Convert PNG to S6 and push to the device.",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art device(s)",
+          "description": "Target SMARTWIZ+ art device(s). Multiple selection supported."
+        },
+        "input_path": {
+          "name": "Input path",
+          "description": "Path to the input PNG file."
+        },
+        "s6_filename": {
+          "name": "S6 filename",
+          "description": "Filename used on the device."
+        },
+        "image_fit": {
+          "name": "Image fit mode",
+          "description": "How the image is fitted to the display (crop / fit / stretch)"
+        },
+        "photo_preset": {
+          "name": "Photo preset",
+          "description": "Preset for adjusting photo tone and contrast (auto / natural / vivid / soft)"
+        },
+        "dither": {
+          "name": "Dither",
+          "description": "Enable dithering to smooth color gradients"
+        }
+      }
+    },
+    "update_and_push": {
+      "name": "Update and push",
+      "description": "Build, render, convert, and push in one step.",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art device(s)",
+          "description": "Target SMARTWIZ+ art device(s). Multiple selection supported."
+        },
+        "template": {
+          "name": "Template",
+          "description": "Template name."
+        },
+        "theme": {
+          "name": "Theme",
+          "description": "Theme name."
+        },
+        "lang": {
+          "name": "Language",
+          "description": "Language used for rendering."
+        },
+        "filename": {
+          "name": "Output filename",
+          "description": "PNG filename to save before conversion."
+        },
+        "s6_filename": {
+          "name": "S6 filename",
+          "description": "Filename used on the device."
+        },
+        "weather_entity": {
+          "name": "Weather entity",
+          "description": "Entity used for weather."
+        },
+        "weather_attribute": {
+          "name": "Weather attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.condition"
+        },
+        "high_temp_entity": {
+          "name": "High temperature entity",
+          "description": "Entity used for high temperature."
+        },
+        "high_temp_attribute": {
+          "name": "High temperature attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.temperature"
+        },
+        "low_temp_entity": {
+          "name": "Low temperature entity",
+          "description": "Entity used for low temperature."
+        },
+        "low_temp_attribute": {
+          "name": "Low temperature attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.templow"
+        },
+        "rain_entity": {
+          "name": "Rain entity",
+          "description": "Entity used for rain."
+        },
+        "rain_attribute": {
+          "name": "Rain attribute",
+          "description": "Uses the state if omitted. Example: forecast.0.precipitation_probability"
+        },
+        "calendar_entity": {
+          "name": "Calendar entity",
+          "description": "Calendar entity used as schedule source."
+        },
+        "calendar_attribute": {
+          "name": "Calendar attribute",
+          "description": "Uses the state if omitted. Example: message"
+        },
+        "schedule_entity": {
+          "name": "Schedule entity",
+          "description": "Entity used for schedule."
+        },
+        "schedule_attribute": {
+          "name": "Schedule attribute",
+          "description": "Uses the state if omitted. Supports string, list, and newline-separated text."
+        },
+        "indoor_temp_entity": {
+          "name": "Indoor temperature entity",
+          "description": "Entity used for indoor temperature."
+        },
+        "indoor_temp_attribute": {
+          "name": "Indoor temperature attribute",
+          "description": "Uses the state if omitted."
+        },
+        "front_lock_entity": {
+          "name": "Front lock entity",
+          "description": "Entity used for front door lock state."
+        },
+        "front_lock_attribute": {
+          "name": "Front lock attribute",
+          "description": "Uses the state if omitted."
+        },
+        "home_status_entity": {
+          "name": "Home status entity",
+          "description": "Entity used for home status."
+        },
+        "home_status_attribute": {
+          "name": "Home status attribute",
+          "description": "Uses the state if omitted. Supports list and newline-separated text."
+        },
+        "message_entity": {
+          "name": "Message entity",
+          "description": "Entity used for message."
+        },
+        "message_attribute": {
+          "name": "Message attribute",
+          "description": "Uses the state if omitted. Example: message / friendly_name"
+        },
+        "image_path_entity": {
+          "name": "Image path entity",
+          "description": "Entity used for image path."
+        },
+        "image_path_attribute": {
+          "name": "Image path attribute",
+          "description": "Uses the state if omitted. Example: /media/my_picture.png"
+        },
+        "photo_preset": {
+          "name": "Photo preset",
+          "description": "Preset for adjusting photo tone and contrast (auto / natural / vivid / soft)"
+        },
+        "dither": {
+          "name": "Dither",
+          "description": "Enable dithering to smooth color gradients"
+        },
+        "source_map": {
+          "name": "Source map",
+          "description": "Map template variables to entity IDs using name: entity_id format.\n\n👉 [See the docs...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md)"
+        },
+        "variables": {
+          "name": "Variables",
+          "description": "Define template variables using name: \"text\" format.\n\n👉 [See the docs...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md)"
+        }
+      }
+    },
+    "register_device": {
+      "name": "Register device",
+      "description": "Register the device for SMARTWIZ+ art local API access. This creates or reuses the local RSA key pair and stores the device public key returned by the device.",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant device",
+          "description": "Target SMARTWIZ+ art device."
+        },
+        "host": {
+          "name": "Host IP",
+          "description": "Overrides the configured host IP address when set."
+        }
+      }
+    },
+    "unregister_device": {
+      "name": "Unregister device",
+      "description": "Unregister the device from SMARTWIZ+ art local API access. This requires the same private key that was used during registration.",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant device",
+          "description": "Target SMARTWIZ+ art device."
+        },
+        "host": {
+          "name": "Host IP",
+          "description": "Overrides the configured host IP address when set."
+        },
+        "purge_local_keys": {
+          "name": "Purge local keys",
+          "description": "Also delete local app_private.der and app_public.der after a successful unregister."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "domain": "smartwiz_art",
+  "name": "SMARTWIZ+ art",
+  "version": "1.0.0",
+  "documentation": "https://github.com/nao-pon/ha_smartwiz_art",
+  "issue_tracker": "https://github.com/nao-pon/ha_smartwiz_art/issues",
+  "codeowners": [
+    "@nao-pon"
+  ],
+  "iot_class": "local_push",
+  "config_flow": true,
+  "integration_type": "device",
+  "requirements": [],
+  "zeroconf": [
+    {
+      "type": "_http._tcp.local."
+    }
+  ]
+}

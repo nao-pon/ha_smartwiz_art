@@ -1,0 +1,291 @@
+blueprint:
+  name: SMARTWIZ+ art Slideshow Update and Push
+  description: >
+    Runs update_and_push sequentially at a fixed interval,
+    based on the last successful push timestamp sensor of SMARTWIZ+ art.
+
+    On Home Assistant restart, it evaluates the elapsed time since the last update
+    and either executes immediately or resumes the timer with the remaining time.
+
+    If the sensor state is not initialized on first run, it performs one initial
+    update_and_push at startup.
+
+  domain: automation
+
+  input:
+    smartwiz_sensor:
+      name: SMARTWIZ+ art status sensor
+      description: Sensor that holds the last successful push timestamp in its state
+      selector:
+        entity:
+          domain: sensor
+          integration: smartwiz_art
+
+    slide_image_select:
+      name: Slide image input_select
+      description: input_select that contains image paths in sequence
+      selector:
+        entity:
+          domain: input_select
+
+    slideshow_message:
+      name: Slideshow message
+      description: Message to be sent to the device
+      selector:
+        entity:
+          domain: input_text
+
+    slideshow_timer:
+      name: Slideshow timer
+      description: Timer used for waiting between updates
+      selector:
+        entity:
+          domain: timer
+
+    interval_minutes:
+      name: Interval minutes
+      description: Wait time until the next update_and_push
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 1440
+          mode: box
+          unit_of_measurement: min
+
+    active_from:
+      name: Active from
+      description: Time to start the slideshow
+      default: "07:00:00"
+      selector:
+        time:
+
+    active_to:
+      name: Active to
+      description: Time to stop the slideshow
+      default: "22:00:00"
+      selector:
+        time:
+
+    template_name:
+      name: Template
+      default: today_with_image
+      selector:
+        text:
+
+    output_filename:
+      name: Output filename
+      default: slideshow.png
+      selector:
+        text:
+
+    cycle_images:
+      name: Cycle images
+      description: Return to the first image after reaching the end
+      default: true
+      selector:
+        boolean:
+
+    lang:
+      default: ja
+      description: Display language
+      selector:
+        select:
+          options:
+            - en
+            - ja
+
+    source_map:
+      name: Source map
+      description: source_map passed to update_and_push
+      default: {}
+      selector:
+        object:
+
+    variables_map:
+      name: Variables
+      description: variables passed to update_and_push
+      default: {}
+      selector:
+        object:
+
+mode: restart
+
+triggers:
+  - trigger: state
+    entity_id: !input smartwiz_sensor
+    to: null
+    id: sensor_updated
+
+  - trigger: event
+    event_type: timer.finished
+    event_data:
+      entity_id: !input slideshow_timer
+    id: timer_finished
+
+  - trigger: homeassistant
+    event: start
+    id: ha_start
+
+  - trigger: time
+    at: !input active_from
+    id: active_window_start
+
+variables:
+  smartwiz_sensor: !input smartwiz_sensor
+  interval_minutes: !input interval_minutes
+
+  interval_seconds: "{{ (interval_minutes | int(60)) * 60 }}"
+  duration: >
+    {{ "%02d:%02d:%02d"|format(
+        (interval_seconds // 3600) | int,
+        ((interval_seconds % 3600) // 60) | int,
+        (interval_seconds % 60) | int
+    ) }}
+
+  sensor_state: "{{ states(smartwiz_sensor) }}"
+  has_last_push: >
+    {{ states(smartwiz_sensor) not in ['unknown', 'unavailable', 'none', ''] }}
+  last_push_ts: >
+    {% set s = states(smartwiz_sensor) %}
+    {% if s in ['unknown', 'unavailable', 'none', ''] %}
+      {{ none }}
+    {% else %}
+      {{ as_timestamp(s) }}
+    {% endif %}
+
+  active_from: !input active_from
+  active_to: !input active_to
+  is_active_time: >
+    {% set now_t = now().strftime('%H:%M:%S') %}
+    {% if active_from <= active_to %}
+      {{ active_from <= now_t < active_to }}
+    {% else %}
+      {{ now_t >= active_from or now_t < active_to }}
+    {% endif %}
+
+conditions: []
+
+actions:
+  - choose:
+      # 1) When the push success timestamp sensor updates, schedule the next run
+      - conditions:
+          - condition: trigger
+            id: sensor_updated
+          - condition: template
+            value_template: >
+              {{ trigger.to_state is not none and
+                 trigger.to_state.state not in ['unknown', 'unavailable', 'none', ''] and
+                 (trigger.from_state is none or
+                  trigger.to_state.state != trigger.from_state.state) }}
+        sequence:
+          - action: timer.start
+            target:
+              entity_id: !input slideshow_timer
+            data:
+              duration: >
+                {{ "%02d:%02d:%02d"|format(
+                    (interval_seconds // 3600) | int,
+                    ((interval_seconds % 3600) // 60) | int,
+                    (interval_seconds % 60) | int
+                ) }}
+
+      # 2) When the timer finishes, advance the image and run update_and_push
+      - conditions:
+          - condition: trigger
+            id: timer_finished
+          - condition: template
+            value_template: "{{ is_active_time }}"
+        sequence:
+          - action: input_select.select_next
+            target:
+              entity_id: !input slide_image_select
+            data:
+              cycle: !input cycle_images
+
+          - action: smartwiz_art.update_and_push
+            data:
+              ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+              template: !input template_name
+              filename: !input output_filename
+              image_path_entity: !input slide_image_select
+              message_entity: !input slideshow_message
+              lang: !input lang
+              source_map: !input source_map
+              variables: !input variables_map
+
+      # 3) Adjustment on Home Assistant startup
+      - conditions:
+          - condition: trigger
+            id:
+              - ha_start
+              - active_window_start
+        sequence:
+          - choose:
+              # 3-a) If state is empty on first run, execute once immediately
+              - conditions:
+                  - condition: template
+                    value_template: "{{ not has_last_push }}"
+                  - condition: template
+                    value_template: "{{ is_active_time }}"
+                sequence:
+                  - action: smartwiz_art.update_and_push
+                    data:
+                      ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+                      template: !input template_name
+                      filename: !input output_filename
+                      image_path_entity: !input slide_image_select
+                      message_entity: !input slideshow_message
+                      lang: !input lang
+                      source_map: !input source_map
+                      variables: !input variables_map
+
+              # 3-b) If state exists, determine based on elapsed time
+              - conditions:
+                  - condition: template
+                    value_template: "{{ has_last_push }}"
+                sequence:
+                  - variables:
+                      elapsed_seconds: "{{ (as_timestamp(now()) - last_push_ts) | int(0) }}"
+                      remain_seconds: "{{ [interval_seconds - ((as_timestamp(now()) - last_push_ts) | int(0)), 0] | max }}"
+
+                  - choose:
+                      # If overdue, execute immediately
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ elapsed_seconds >= interval_seconds }}"
+                          - condition: template
+                            value_template: "{{ is_active_time }}"
+                        sequence:
+                          - action: input_select.select_next
+                            target:
+                              entity_id: !input slide_image_select
+                            data:
+                              cycle: !input cycle_images
+
+                          - action: smartwiz_art.update_and_push
+                            data:
+                              ha_device_id: "{{ device_id(smartwiz_sensor) }}"
+                              template: !input template_name
+                              filename: !input output_filename
+                              image_path_entity: !input slide_image_select
+                              message_entity: !input slideshow_message
+                              lang: !input lang
+                              source_map: !input source_map
+                              variables: !input variables_map
+
+                      # Otherwise, restart timer with remaining time
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ elapsed_seconds < interval_seconds }}"
+                        sequence:
+                          - action: timer.start
+                            target:
+                              entity_id: !input slideshow_timer
+                            data:
+                              duration: >
+                                {{ "%02d:%02d:%02d"|format(
+                                    (remain_seconds // 3600) | int,
+                                    ((remain_seconds % 3600) // 60) | int,
+                                    (remain_seconds % 60) | int
+                                ) }}

@@ -1,0 +1,416 @@
+{
+  "title": "SMARTWIZ+ art",
+  "config": {
+    "step": {
+      "user": {
+        "title": "SMARTWIZ+ art セットアップ",
+        "description": "手動セットアップ用のフォールバックです。device_id は必須です。host は固定IPで運用する場合のみ指定してください。省略時は smartwiz-art-<device_id>.local を使用します。",
+        "data": {
+          "device_id": "デバイスID",
+          "host": "ホスト IP（省略可・固定IP向け）",
+          "width": "幅",
+          "height": "高さ"
+        }
+      },
+      "discovery_confirm": {
+        "title": "SMARTWIZ+ art を発見",
+        "description": "SMARTWIZ+ art デバイス {device_id} を {host} で発見しました。Home Assistant に登録するには確認してください。"
+      }
+    },
+    "error": {
+      "invalid_device_id": "デバイスIDが不正です。",
+      "cannot_register": "デバイスの登録に失敗しました。",
+      "unknown": "予期しないエラーが発生しました。",
+      "cannot_resolve": "発見情報からホスト情報を取得できませんでした。",
+      "cannot_connect": "デバイスへ接続できませんでした。ホスト設定とネットワーク接続を確認してから、もう一度お試しください。",
+      "registration_timeout": "デバイスは見つかりましたが、応答がありませんでした。デバイスがスリープ中の可能性があります。本体のボタンを押して起動し、1分以内にもう一度お試しください。",
+      "key_exchange_failed": "デバイスとは通信できましたが、キー登録に失敗しました。すでに公式アプリなどに登録されている場合、新しいキーは登録できません。先に公式アプリ側でデバイスを削除してから、もう一度追加してください。"
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+      "not_smartwiz_art": "発見された機器は SMARTWIZ+ art ではありません。"
+    }
+  },
+  "services": {
+    "render_today": {
+      "name": "今日パネルをレンダリング",
+      "description": "明示的に指定した値から SMARTWIZ+ art 画像を生成します。",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。複数指定できます。"
+        },
+        "filename": {
+          "name": "出力ファイル名",
+          "description": "保存する PNG ファイル名"
+        },
+        "date": {
+          "name": "日付",
+          "description": "表示する日付テキスト"
+        },
+        "weekday": {
+          "name": "曜日",
+          "description": "表示する曜日テキスト"
+        },
+        "weather": {
+          "name": "天気",
+          "description": "表示する天気テキスト"
+        },
+        "temperature": {
+          "name": "気温",
+          "description": "表示する気温テキスト"
+        },
+        "rain": {
+          "name": "降水",
+          "description": "表示する降水テキスト"
+        },
+        "schedule": {
+          "name": "予定",
+          "description": "描画する予定オブジェクト"
+        },
+        "home_status": {
+          "name": "ホーム状態",
+          "description": "描画するホーム状態オブジェクト"
+        },
+        "message": {
+          "name": "メッセージ",
+          "description": "表示するメッセージ"
+        },
+        "theme": {
+          "name": "テーマ",
+          "description": "テーマ名"
+        },
+        "lang": {
+          "name": "表示言語",
+          "description": "描画に使用する言語"
+        },
+        "template": {
+          "name": "テンプレート",
+          "description": "テンプレート名"
+        }
+      }
+    },
+    "update": {
+      "name": "パネル更新",
+      "description": "Home Assistant のエンティティからパネルデータを構築します。",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。複数指定できます。"
+        },
+        "template": {
+          "name": "テンプレート",
+          "description": "テンプレート名"
+        },
+        "theme": {
+          "name": "テーマ",
+          "description": "テーマ名"
+        },
+        "lang": {
+          "name": "表示言語",
+          "description": "描画に使用する言語"
+        },
+        "filename": {
+          "name": "出力ファイル名",
+          "description": "保存する PNG ファイル名"
+        },
+        "weather_entity": {
+          "name": "天気エンティティ",
+          "description": "天気に使用するエンティティ"
+        },
+        "weather_attribute": {
+          "name": "天気属性",
+          "description": "未指定なら state を使用します。例: forecast.0.condition"
+        },
+        "high_temp_entity": {
+          "name": "最高気温エンティティ",
+          "description": "最高気温に使用するエンティティ"
+        },
+        "high_temp_attribute": {
+          "name": "最高気温属性",
+          "description": "未指定なら state を使用します。例: forecast.0.temperature"
+        },
+        "low_temp_entity": {
+          "name": "最低気温エンティティ",
+          "description": "最低気温に使用するエンティティ"
+        },
+        "low_temp_attribute": {
+          "name": "最低気温属性",
+          "description": "未指定なら state を使用します。例: forecast.0.templow"
+        },
+        "rain_entity": {
+          "name": "降水エンティティ",
+          "description": "降水に使用するエンティティ"
+        },
+        "rain_attribute": {
+          "name": "降水属性",
+          "description": "未指定なら state を使用します。例: forecast.0.precipitation_probability"
+        },
+        "calendar_entity": {
+          "name": "カレンダーエンティティ",
+          "description": "予定の取得元に使うカレンダーエンティティ"
+        },
+        "calendar_attribute": {
+          "name": "カレンダー属性",
+          "description": "未指定なら state を使用します。例: message"
+        },
+        "schedule_entity": {
+          "name": "予定エンティティ",
+          "description": "予定に使用するエンティティ"
+        },
+        "schedule_attribute": {
+          "name": "予定属性",
+          "description": "未指定なら state を使用します。文字列・配列・改行区切りに対応します。"
+        },
+        "indoor_temp_entity": {
+          "name": "室内温度エンティティ",
+          "description": "室内温度に使用するエンティティ"
+        },
+        "indoor_temp_attribute": {
+          "name": "室内温度属性",
+          "description": "未指定なら state を使用します。"
+        },
+        "front_lock_entity": {
+          "name": "玄関ロックエンティティ",
+          "description": "玄関ドアのロック状態に使用するエンティティ"
+        },
+        "front_lock_attribute": {
+          "name": "玄関ロック属性",
+          "description": "未指定なら state を使用します。"
+        },
+        "home_status_entity": {
+          "name": "ホーム状態エンティティ",
+          "description": "ホーム状態に使用するエンティティ"
+        },
+        "home_status_attribute": {
+          "name": "ホーム状態属性",
+          "description": "未指定なら state を使用します。配列・改行区切りに対応します。"
+        },
+        "message_entity": {
+          "name": "メッセージエンティティ",
+          "description": "メッセージに使用するエンティティ"
+        },
+        "message_attribute": {
+          "name": "メッセージ属性",
+          "description": "未指定なら state を使用します。例: message / friendly_name"
+        },
+        "image_path_entity": {
+          "name": "画像パスエンティティ",
+          "description": "画像パスに使用するエンティティ"
+        },
+        "image_path_attribute": {
+          "name": "画像パス属性",
+          "description": "未指定なら state を使用します。例: /media/my_picture.png"
+        },
+        "photo_preset": {
+          "name": "写真プリセット",
+          "description": "写真の色味やコントラストを調整するプリセット（auto / natural / vivid / soft）"
+        },
+        "source_map": {
+          "name": "ソースマップ",
+          "description": "テンプレート変数に対するエンティティIDを name: entityID の形式で記述。\n\n👉 [詳しくはドキュメントで...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md)"
+        },
+        "variables": {
+          "name": "変数",
+          "description": "テンプレート変数に対するテキストを name: \"テキスト\" の形式で記述。\n\n👉 [詳しくはドキュメントで...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md)"
+        }
+      }
+    },
+    "push_file": {
+      "name": "ファイル送信",
+      "description": "PNG を S6 に変換してデバイスへ送信します。",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。複数指定できます。"
+        },
+        "input_path": {
+          "name": "入力パス",
+          "description": "入力 PNG ファイルのパス"
+        },
+        "s6_filename": {
+          "name": "S6 ファイル名",
+          "description": "デバイス上で使用するファイル名"
+        },
+        "image_fit": {
+          "name": "画像フィット方式",
+          "description": "画面への合わせ方を選びます（crop / fit / stretch）"
+        },
+        "photo_preset": {
+          "name": "写真プリセット",
+          "description": "写真の色味やコントラストを調整するプリセット（auto / natural / vivid / soft）"
+        },
+        "dither": {
+          "name": "ディザ",
+          "description": "ディザリングを有効にして階調を滑らかにします"
+        }
+      }
+    },
+    "update_and_push": {
+      "name": "更新して送信",
+      "description": "構築、描画、変換、送信までをまとめて実行します。",
+      "fields": {
+        "ha_device_id": {
+          "name": "SMARTWIZ+ art デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。複数指定できます。"
+        },
+        "template": {
+          "name": "テンプレート",
+          "description": "テンプレート名"
+        },
+        "theme": {
+          "name": "テーマ",
+          "description": "テーマ名"
+        },
+        "lang": {
+          "name": "表示言語",
+          "description": "描画に使用する言語"
+        },
+        "filename": {
+          "name": "出力ファイル名",
+          "description": "変換前に保存する PNG ファイル名"
+        },
+        "s6_filename": {
+          "name": "S6 ファイル名",
+          "description": "デバイス上で使用するファイル名"
+        },
+        "weather_entity": {
+          "name": "天気エンティティ",
+          "description": "天気に使用するエンティティ"
+        },
+        "weather_attribute": {
+          "name": "天気属性",
+          "description": "未指定なら state を使用します。例: forecast.0.condition"
+        },
+        "high_temp_entity": {
+          "name": "最高気温エンティティ",
+          "description": "最高気温に使用するエンティティ"
+        },
+        "high_temp_attribute": {
+          "name": "最高気温属性",
+          "description": "未指定なら state を使用します。例: forecast.0.temperature"
+        },
+        "low_temp_entity": {
+          "name": "最低気温エンティティ",
+          "description": "最低気温に使用するエンティティ"
+        },
+        "low_temp_attribute": {
+          "name": "最低気温属性",
+          "description": "未指定なら state を使用します。例: forecast.0.templow"
+        },
+        "rain_entity": {
+          "name": "降水エンティティ",
+          "description": "降水に使用するエンティティ"
+        },
+        "rain_attribute": {
+          "name": "降水属性",
+          "description": "未指定なら state を使用します。例: forecast.0.precipitation_probability"
+        },
+        "calendar_entity": {
+          "name": "カレンダーエンティティ",
+          "description": "予定の取得元に使うカレンダーエンティティ"
+        },
+        "calendar_attribute": {
+          "name": "カレンダー属性",
+          "description": "未指定なら state を使用します。例: message"
+        },
+        "schedule_entity": {
+          "name": "予定エンティティ",
+          "description": "予定に使用するエンティティ"
+        },
+        "schedule_attribute": {
+          "name": "予定属性",
+          "description": "未指定なら state を使用します。文字列・配列・改行区切りに対応します。"
+        },
+        "indoor_temp_entity": {
+          "name": "室内温度エンティティ",
+          "description": "室内温度に使用するエンティティ"
+        },
+        "indoor_temp_attribute": {
+          "name": "室内温度属性",
+          "description": "未指定なら state を使用します。"
+        },
+        "front_lock_entity": {
+          "name": "玄関ロックエンティティ",
+          "description": "玄関ドアのロック状態に使用するエンティティ"
+        },
+        "front_lock_attribute": {
+          "name": "玄関ロック属性",
+          "description": "未指定なら state を使用します。"
+        },
+        "home_status_entity": {
+          "name": "ホーム状態エンティティ",
+          "description": "ホーム状態に使用するエンティティ"
+        },
+        "home_status_attribute": {
+          "name": "ホーム状態属性",
+          "description": "未指定なら state を使用します。配列・改行区切りに対応します。"
+        },
+        "message_entity": {
+          "name": "メッセージエンティティ",
+          "description": "メッセージに使用するエンティティ"
+        },
+        "message_attribute": {
+          "name": "メッセージ属性",
+          "description": "未指定なら state を使用します。例: message / friendly_name"
+        },
+        "image_path_entity": {
+          "name": "画像パスエンティティ",
+          "description": "画像パスに使用するエンティティ"
+        },
+        "image_path_attribute": {
+          "name": "画像パス属性",
+          "description": "未指定なら state を使用します。例: /media/my_picture.png"
+        },
+        "photo_preset": {
+          "name": "写真プリセット",
+          "description": "写真の色味やコントラストを調整するプリセット（auto / natural / vivid / soft）"
+        },
+        "dither": {
+          "name": "ディザ",
+          "description": "ディザリングを有効にして階調を滑らかにします"
+        },
+        "source_map": {
+          "name": "ソースマップ",
+          "description": "テンプレート変数に対するテキストを name: \"テキスト\" の形式で記述。\n\n👉 [詳しくはドキュメントで...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md)"
+        },
+        "variables": {
+          "name": "変数",
+          "description": "テンプレート変数に対するテキストを name: \"テキスト\" の形式で記述。\n\n👉 [詳しくはドキュメントで...](https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md)"
+        }
+      }
+    },
+    "register_device": {
+      "name": "デバイスを登録",
+      "description": "SMARTWIZ+ art ローカルAPI用にデバイスを登録します。ローカルのRSA鍵ペアを作成または再利用し、デバイスが返した公開鍵を保存します。",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。"
+        },
+        "host": {
+          "name": "ホストIP",
+          "description": "指定した場合は、設定済みの host IP アドレスより優先して使用します。"
+        }
+      }
+    },
+    "unregister_device": {
+      "name": "デバイス登録を解除",
+      "description": "SMARTWIZ+ art ローカルAPIからデバイス登録を解除します。登録時に使用した秘密鍵が必要です。",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant デバイス",
+          "description": "対象の SMARTWIZ+ art デバイス。"
+        },
+        "host": {
+          "name": "ホストIP",
+          "description": "指定した場合は、設定済みの host IP アドレスより優先して使用します。"
+        },
+        "purge_local_keys": {
+          "name": "ローカル鍵も削除",
+          "description": "登録解除成功後に、ローカルの app_private.der と app_public.der も削除します。"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SMARTWIZ+ art",
+        "description": "Set up your SMARTWIZ+ art panel manually.",
+        "data": {
+          "host": "Host or IP address",
+          "device_id": "Device ID",
+          "width": "Width",
+          "height": "Height"
+        }
+      },
+      "discovery_confirm": {
+        "title": "Discovered SMARTWIZ+ art",
+        "description": "SMARTWIZ+ art device {device_id} was discovered at {host}. Confirm to register it with Home Assistant."
+      },
+      "reconfigure": {
+        "title": "Reconfigure SMARTWIZ+ art",
+        "description": "Update the connection settings and display resolution for this SMARTWIZ+ art panel.",
+        "data": {
+          "host": "Host or IP address",
+          "width": "Width",
+          "height": "Height"
+        }
+      }
+    },
+    "error": {
+      "invalid_device_id": "Invalid device ID.",
+      "cannot_register": "Failed to register the device.",
+      "unknown": "Unexpected error occurred.",
+      "cannot_resolve": "Could not resolve host information from discovery.",
+      "cannot_connect": "Could not connect to the device. Check the host setting and network connection, then try again.",
+      "registration_timeout": "The device was found but did not respond. It may be asleep. Press the button on the device to wake it up, then try again within 1 minute.",
+      "key_exchange_failed": "The device responded, but key registration failed. If it is already registered in the official app or another app, remove it there first, then try again."
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+      "not_smartwiz_art": "The discovered device is not a SMARTWIZ+ art panel.",
+      "reconfigure_successful": "Configuration was updated successfully."
+    }
+  },
+  "services": {
+    "register_device": {
+      "name": "Register device",
+      "description": "Register the device for SMARTWIZ+ art local API access.",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant device",
+          "description": "Target SMARTWIZ+ art device."
+        },
+        "host": {
+          "name": "Host IP",
+          "description": "Overrides the configured host IP address when set."
+        }
+      }
+    },
+    "unregister_device": {
+      "name": "Unregister device",
+      "description": "Unregister the device from SMARTWIZ+ art local API access.",
+      "fields": {
+        "ha_device_id": {
+          "name": "Home Assistant device",
+          "description": "Target SMARTWIZ+ art device."
+        },
+        "host": {
+          "name": "Host IP",
+          "description": "Overrides the configured host IP address when set."
+        },
+        "purge_local_keys": {
+          "name": "Purge local keys",
+          "description": "Also delete local app_private.der and app_public.der after a successful unregister."
+        }
+      }
+    }
+  }
+}

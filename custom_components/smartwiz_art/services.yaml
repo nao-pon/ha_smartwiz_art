@@ -1,0 +1,521 @@
+render_today:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: true
+
+    filename:
+      default: smartwiz_today.png
+      selector:
+        text:
+
+    date:
+      required: true
+      selector:
+        text:
+
+    weekday:
+      required: true
+      selector:
+        text:
+
+    weather:
+      required: true
+      selector:
+        text:
+
+    temperature:
+      required: true
+      selector:
+        text:
+
+    rain:
+      selector:
+        text:
+
+    schedule:
+      selector:
+        object:
+
+    home_status:
+      selector:
+        object:
+
+    message:
+      selector:
+        text:
+
+    theme:
+      default: washi
+      selector:
+        text:
+
+    lang:
+      default: ja
+      selector:
+        select:
+          options:
+            - ja
+            - en
+
+    template:
+      default: today_with_image
+      selector:
+        select:
+          options:
+            - today
+            - today_with_image
+            - notice
+
+
+update:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: true
+
+    template:
+      default: today_with_image
+      selector:
+        select:
+          options:
+            - today
+            - today_with_image
+            - notice
+
+    theme:
+      default: washi
+      selector:
+        text:
+
+    lang:
+      default: ja
+      selector:
+        select:
+          options:
+            - ja
+            - en
+
+    filename:
+      default: smartwiz_today.png
+      selector:
+        text:
+
+    # ===== weather =====
+    weather_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+
+    weather_attribute:
+      selector:
+        text:
+
+    # ===== temperature =====
+    high_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    high_temp_attribute:
+      selector:
+        text:
+
+    low_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    low_temp_attribute:
+      selector:
+        text:
+
+    # ===== rain =====
+    rain_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    rain_attribute:
+      selector:
+        text:
+
+    # ===== schedule =====
+    calendar_entity:
+      selector:
+        entity:
+          filter:
+            - domain: calendar
+
+    calendar_attribute:
+      selector:
+        text:
+
+    schedule_entity:
+      selector:
+        entity:
+          filter:
+            - domain: calendar
+            - domain: sensor
+            - domain: input_text
+
+    schedule_attribute:
+      selector:
+        text:
+
+    # ===== indoor =====
+    indoor_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+
+    indoor_temp_attribute:
+      selector:
+        text:
+
+    # ===== lock =====
+    front_lock_entity:
+      selector:
+        entity:
+          filter:
+            - domain: lock
+
+    front_lock_attribute:
+      selector:
+        text:
+
+    # ===== home =====
+    home_status_entity:
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+            - domain: input_text
+
+    home_status_attribute:
+      selector:
+        text:
+
+    # ===== message =====
+    message_entity:
+      selector:
+        entity:
+          filter:
+            - domain: input_text
+            - domain: input_select
+            - domain: sensor
+
+    message_attribute:
+      selector:
+        text:
+
+    # ===== image_path =====
+    image_path_entity:
+      selector:
+        entity:
+          filter:
+            - domain: input_text
+            - domain: input_select
+            - domain: sensor
+
+    image_path_attribute:
+      selector:
+        text:
+
+    photo_preset:
+      required: false
+      default: auto
+      selector:
+        select:
+          options:
+            - auto
+            - natural
+            - vivid
+            - soft
+
+    source_map:
+      selector:
+        object:
+
+    variables:
+      selector:
+        object:
+
+push_file:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: true
+
+    input_path:
+      required: true
+      selector:
+        text:
+
+    s6_filename:
+      selector:
+        text:
+
+    image_fit:
+      required: false
+      default: crop
+      selector:
+        select:
+          options:
+            - crop
+            - fit
+            - stretch
+
+    photo_preset:
+      required: false
+      default: auto
+      selector:
+        select:
+          options:
+            - auto
+            - natural
+            - vivid
+            - soft
+
+    dither:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+update_and_push:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: true
+
+    template:
+      default: today_with_image
+      selector:
+        select:
+          options:
+            - today
+            - today_with_image
+            - notice
+
+    theme:
+      default: washi
+      selector:
+        text:
+
+    lang:
+      default: ja
+      selector:
+        select:
+          options:
+            - ja
+            - en
+
+    filename:
+      default: smartwiz_today.png
+      selector:
+        text:
+
+    s6_filename:
+      selector:
+        text:
+
+    # ===== weather =====
+    weather_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+
+    weather_attribute:
+      selector:
+        text:
+
+    # ===== temperature =====
+    high_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    high_temp_attribute:
+      selector:
+        text:
+
+    low_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    low_temp_attribute:
+      selector:
+        text:
+
+    # ===== rain =====
+    rain_entity:
+      selector:
+        entity:
+          filter:
+            - domain: weather
+            - domain: sensor
+
+    rain_attribute:
+      selector:
+        text:
+
+    # ===== schedule =====
+    calendar_entity:
+      selector:
+        entity:
+          filter:
+            - domain: calendar
+
+    calendar_attribute:
+      selector:
+        text:
+
+    schedule_entity:
+      selector:
+        entity:
+          filter:
+            - domain: calendar
+            - domain: sensor
+            - domain: input_text
+
+    schedule_attribute:
+      selector:
+        text:
+
+    # ===== indoor =====
+    indoor_temp_entity:
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+
+    indoor_temp_attribute:
+      selector:
+        text:
+
+    # ===== lock =====
+    front_lock_entity:
+      selector:
+        entity:
+          filter:
+            - domain: lock
+
+    front_lock_attribute:
+      selector:
+        text:
+
+    # ===== home =====
+    home_status_entity:
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+            - domain: input_text
+
+    home_status_attribute:
+      selector:
+        text:
+
+    # ===== message =====
+    message_entity:
+      selector:
+        entity:
+          filter:
+            - domain: input_text
+            - domain: input_select
+            - domain: sensor
+
+    message_attribute:
+      selector:
+        text:
+
+    # ===== image_path =====
+    image_path_entity:
+      selector:
+        entity:
+          filter:
+            - domain: input_text
+            - domain: input_select
+            - domain: sensor
+
+    image_path_attribute:
+      selector:
+        text:
+
+    photo_preset:
+      required: false
+      default: auto
+      selector:
+        select:
+          options:
+            - auto
+            - natural
+            - vivid
+            - soft
+
+    dither:
+      required: false
+      default: true
+      selector:
+        boolean:
+
+    source_map:
+      selector:
+        object:
+
+    variables:
+      selector:
+        object:
+
+
+register_device:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: false
+
+    host:
+      selector:
+        text:
+
+unregister_device:
+  fields:
+    ha_device_id:
+      selector:
+        device:
+          integration: smartwiz_art
+          multiple: false
+
+    host:
+      selector:
+        text:
+
+    purge_local_keys:
+      default: false
+      selector:
+        boolean:
