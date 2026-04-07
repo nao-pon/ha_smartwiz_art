@@ -2,6 +2,11 @@
 
 A powerful Home Assistant custom integration for **SMARTWIZ+ art e-paper panels**, enabling local device registration, advanced image rendering, and reliable push workflows.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_wall.jpg" width="45%" />
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_ss.png" width="45%" />
+</p>
+
 ---
 
 ## ✨ Features
