@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "SMARTWIZ+ art Setup",
-        "description": "Manual setup fallback. Device ID is required. Enter host only when using a fixed IP address. If omitted, smartwiz-art-<device_id>.local will be used.",
+        "description": "Manual setup fallback. Device ID is required. Enter host only when using a fixed IP address. If omitted, smartwiz-art-[device_id].local will be used.",
         "data": {
           "device_id": "Device ID",
           "host": "Host IP (optional, fixed IP only)",

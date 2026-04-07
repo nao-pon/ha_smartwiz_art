@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "SMARTWIZ+ art セットアップ",
-        "description": "手動セットアップ用のフォールバックです。device_id は必須です。host は固定IPで運用する場合のみ指定してください。省略時は smartwiz-art-<device_id>.local を使用します。",
+        "description": "手動セットアップ用のフォールバックです。device_id は必須です。host は固定IPで運用する場合のみ指定してください。省略時は smartwiz-art-[device_id].local を使用します。",
         "data": {
           "device_id": "デバイスID",
           "host": "ホスト IP（省略可・固定IP向け）",
