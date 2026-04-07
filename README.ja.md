@@ -212,7 +212,7 @@ variables > source_map > default
 
 ### 📚 詳細ドキュメント
 
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md
+👉 [ha_smartwiz_art/docs/source_map.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/source_map.md)
 
 ---
 
@@ -260,7 +260,7 @@ variables > source_map > default
 ```
 
 詳細ドキュメント:
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md
+👉 [smartwiz_art/docs/variables.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/variables.md)
 
 ---
 
