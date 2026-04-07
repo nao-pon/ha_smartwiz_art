@@ -97,14 +97,18 @@ blueprint:
 
     source_map:
       name: Source map
-      description: source_map passed to update_and_push
+      description: >
+        source_map passed to update_and_push<br><br>
+        👉 [See the docs...](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/source_map.md)
       default: {}
       selector:
         object:
 
     variables_map:
       name: Variables
-      description: variables passed to update_and_push
+      description: >
+        variables passed to update_and_push<br><br>
+        👉 [See the docs...](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/variables.md)
       default: {}
       selector:
         object:
