@@ -82,11 +82,10 @@ Restart Home Assistant and add the integration.
 
 ---
 
-## 📱 Android Wi-Fi Setup App (Optional)
+## 📱 Android Wi-Fi Setup App (Bonus)
 
 A simple Android app for configuring Wi-Fi on SMARTWIZ+ art devices.
 
-* No official app required
 * No account registration required
 * Wi-Fi provisioning via BLE
 
@@ -222,7 +221,7 @@ variables > source_map > default
 
 ### 📚 Full Documentation
 
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md
+👉 [ha_smartwiz_art/docs/source_map.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/source_map.md)
 
 ---
 
@@ -270,7 +269,7 @@ variables > source_map > default
 ```
 
 Full documentation:
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md
+👉 [smartwiz_art/docs/variables.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/variables.md)
 
 ---
 
