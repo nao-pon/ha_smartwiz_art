@@ -3,6 +3,11 @@
 **SMARTWIZ+ art 電子ペーパーパネル**のための強力な Home Assistant カスタム統合です。
 ローカルデバイス登録、高度な画像レンダリング、および信頼性の高いプッシュワークフローを実現します。
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_wall.jpg" width="45%" />
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_ss.png" width="45%" />
+</p>
+
 ---
 
 ## ✨ 主な機能
