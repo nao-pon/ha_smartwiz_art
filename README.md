@@ -2,6 +2,11 @@
 
 A powerful Home Assistant custom integration for **SMARTWIZ+ art e-paper panels**, enabling local device registration, advanced image rendering, and reliable push workflows.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_wall.jpg" width="45%" />
+  <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_ss.png" width="45%" />
+</p>
+
 ---
 
 ## ✨ Features
@@ -77,11 +82,10 @@ Restart Home Assistant and add the integration.
 
 ---
 
-## 📱 Android Wi-Fi Setup App (Optional)
+## 📱 Android Wi-Fi Setup App (Bonus)
 
 A simple Android app for configuring Wi-Fi on SMARTWIZ+ art devices.
 
-* No official app required
 * No account registration required
 * Wi-Fi provisioning via BLE
 
@@ -217,7 +221,7 @@ variables > source_map > default
 
 ### 📚 Full Documentation
 
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/source_map.md
+👉 [ha_smartwiz_art/docs/source_map.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/source_map.md)
 
 ---
 
@@ -265,7 +269,7 @@ variables > source_map > default
 ```
 
 Full documentation:
-👉 https://github.com/nao-pon/smartwiz_art/blob/main/docs/variables.md
+👉 [smartwiz_art/docs/variables.md](https://github.com/nao-pon/ha_smartwiz_art/blob/main/docs/variables.md)
 
 ---
 
