@@ -52,7 +52,7 @@ A powerful Home Assistant custom integration for **SMARTWIZ+ art e-paper panels*
 
 ### HACS (Recommended)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://github.com/nao-pon/ha_smartwiz_art/releases/download/1.0.0/smartwiz_art_setup_1.0.1.apk)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=nao-pon&repository=ha_smartwiz_art&category=integration)
 
 1. Go to HACS → Integrations
 2. Add this repository as a Custom Repository
@@ -85,7 +85,7 @@ A simple Android app for configuring Wi-Fi on SMARTWIZ+ art devices.
 * No account registration required
 * Wi-Fi provisioning via BLE
 
-👉 Download (Android/v1.0.1): [smartwiz_art_setup_1.0.1.apk](https://github.com/nao-pon/ha_smartwiz_art/releases/download/v1.0.0/smartwiz_art_setup_1.0.1.apk)
+👉 Download (Android/v1.0.1): [smartwiz_art_setup_1.0.1.apk](https://github.com/nao-pon/ha_smartwiz_art/releases/download/1.0.0/smartwiz_art_setup_1.0.1.apk)
 
 > [!NOTE]
 > This is a lightweight helper app for Wi-Fi setup only.
