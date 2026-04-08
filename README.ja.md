@@ -8,6 +8,8 @@
   <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_ss.png" width="45%" />
 </p>
 
+この統合では、公式APIリポジトリ（ https://github.com/smartwiz-plus/art ）のサンプルコードの一部を使用しています。
+
 ---
 
 ## ✨ 主な機能

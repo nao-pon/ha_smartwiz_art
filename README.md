@@ -7,6 +7,8 @@ A powerful Home Assistant custom integration for **SMARTWIZ+ art e-paper panels*
   <img src="https://raw.githubusercontent.com/nao-pon/ha_smartwiz_art/refs/heads/main/docs/smartwiz_art_ss.png" width="45%" />
 </p>
 
+This integration uses some of the example code from the official API repository: https://github.com/smartwiz-plus/art.
+
 ---
 
 ## ✨ Features
@@ -314,7 +316,6 @@ You need:
 ## 🐞 Support
 
 * Issues: https://github.com/nao-pon/ha_smartwiz_art/issues
-* Repository: https://github.com/nao-pon/ha_smartwiz_art
 
 ---
 
